@@ -146,3 +146,63 @@ print(data.target) # 教師データが入ってる
 `tf.nn.conv2d(x_data, filter, strides, padding='SAME')`
 出力は`(W - F + 2P) / S + 1`のサイズになる。Wは入力のサイズ、Fはフィルタのサイズ、Pはゼロパディング、Sはストライド
 
+
+# Keras
+## install Keras
+- `pip install Keras`
+
+## examples 
+https://keras.io/ja/getting-started/sequential-model-guide/
+
+# sequential model
+
+## 損失関数（model.compileの時の'loss'引数）
+https://github.com/keras-team/keras/blob/master/keras/losses.py
+
+mean_squared_error, mean_absolute_error, mean_absolute_percentage_error, 
+mean_squared_logarithmic_error, squared_hinge, hinge, categorical_hinge, logcosh
+categorical_crossentropy, sparse_categorical_crossentropy, binary_crossentropy, kullback_leibler_divergence
+poisson, cosine_proximity
+
+``` python
+def mean_squared_error(y_true, y_pred)
+    return K.mean(K.square(y_pred - y_true), axis=-1)
+```
+こんな感じで定義されているっぽい
+
+## fit
+
+- verbose: 
+- callbacks: keras.callbacks.Callback
+- validation_split: 0から1までの浮動小数点数． 訓練データの中で検証データとして使う割合
+- validation_data: 各エポックの損失関数や評価関数で用いられるタプル。訓練には使われない
+
+Historyオブジェクトを返す
+
+## evaluate
+## predict
+## get_layer
+
+## save
+
+    再構築可能なモデルの構造
+    モデルの重み
+    学習時の設定 (loss，optimizer)
+    optimizerの状態．これにより，学習を終えた時点から正確に学習を再開できます
+    keras.models.load_model(filepath)によりモデルを再インスタンス化できます．
+
+
+# functional API
+functional APIは，複数の出力があるモデルや有向非巡回グラフ，共有レイヤーを持ったモデルなどの複雑なモデルを定義するためのインターフェースです．
+functional APIは複数の入出力を持ったモデルに最適です
+
+## 中間層の出力
+
+``` python
+from keras import backend as K
+
+# with a Sequential model
+get_3rd_layer_output = K.function([model.layers[0].input],
+                                  [model.layers[3].output])
+layer_output = get_3rd_layer_output([x])[0]
+```
