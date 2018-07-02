@@ -151,6 +151,26 @@ print(data.target) # 教師データが入ってる
 ## install Keras
 - `pip install Keras`
 
+## 構造
+- Layer : 代替の基底になってるクラス。input/output, nameを基本的には指定するっぽい
+          build(self, input_shape), compute_output_shape(self, input_shape), call(self, inputs, **kwargs)を実装すれば良さそう
+          build関数の最後で`self.built = True`すること。add_weightとかっていうユーティリティが
+
+- RNN(Layer): cellクラスを引数にとる
+              入力は`(batch_size, timesteps, input_dim)`
+              出力は、return_stateとかreturn_sequecesオプションによって変わる
+
+- Cell@RNN : output_at_t, states_at_t_plus_1 = call(input_at_t, states_at_t)
+             `state_size` attribute
+             これもLayer継承してたりする
+
+- Model : 学習をうまい具合にラップしてくれるクラス。print(model.summary())で中身チェック
+
+
+from keras.backend as K
+として、K.dotとかってやるのがふつうのもよう
+
+
 ## examples 
 https://keras.io/ja/getting-started/sequential-model-guide/
 
